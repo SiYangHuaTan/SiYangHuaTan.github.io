@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传作品 - 数字艺术展示平台</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/upload.css">
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- 自定义光标 -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+
+    <div class="container">
+        <header class="page-header">
+            <h1>上传您的数字艺术作品</h1>
+            <p>分享您的创意，让世界看到您的独特视角。上传高质量的数字艺术作品，加入我们的创作者社区。</p>
+        </header>
+
+        <form id="upload-form">
+            <div class="card">
+                <h2 class="card-title">作品信息</h2>
+                <div class="form-group">
+                    <label for="title">作品标题</label>
+                    <input type="text" id="title" name="title" class="form-control" placeholder="为您的作品取一个吸引人的标题" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">作品描述</label>
+                    <textarea id="description" name="description" class="form-control" placeholder="描述您的作品创作理念、灵感来源或特殊技术" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">类别</label>
+                    <select id="category" name="category" class="form-control" required>
+                        <option value="" disabled selected>选择作品类别</option>
+                        <option value="digital-painting">数字绘画</option>
+                        <option value="3d-art">3D艺术</option>
+                        <option value="photography">摄影作品</option>
+                        <option value="mixed-media">混合媒体</option>
+                        <option value="animation">动画</option>
+                        <option value="generative-art">生成艺术</option>
+                        <option value="nft">NFT</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">标签 (用逗号分隔)</label>
+                    <input type="text" id="tags" name="tags" class="form-control" placeholder="例如: 抽象,数字艺术,科幻">
+                </div>
+                
+                <div class="tags-container" id="suggested-tags">
+                    <span class="tag" data-tag="抽象">抽象</span>
+                    <span class="tag" data-tag="科幻">科幻</span>
+                    <span class="tag" data-tag="未来主义">未来主义</span>
+                    <span class="tag" data-tag="概念艺术">概念艺术</span>
+                    <span class="tag" data-tag="极简主义">极简主义</span>
+                    <span class="tag" data-tag="像素艺术">像素艺术</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">上传作品文件</h2>
+                <div class="form-group">
+                    <input type="file" id="file-input" name="artwork" class="file-input" accept="image/*,video/*" multiple>
+                    <label for="file-input" class="file-label" id="file-drop-area">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <span>拖放文件到这里或点击上传</span>
+                        <small>支持的格式: JPG, PNG, GIF, MP4, WebM (最大 50MB)</small>
+                    </label>
+                </div>
+                
+                <div class="preview-container" id="preview-container"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">技术规格</h2>
+                <div class="form-group">
+                    <label for="creation-date">创作日期</label>
+                    <input type="date" id="creation-date" name="creation-date" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="software-used">创作软件</label>
+                    <input type="text" id="software-used" name="software-used" class="form-control" placeholder="例如: Photoshop, Blender, Midjourney">
+                </div>
+                
+                <div class="form-group">
+                    <label>其他技术规格</label>
+                    <div class="specs-container" id="specs-container">
+                        <div class="spec-item">
+                            <input type="text" class="form-control spec-name" placeholder="规格名称 (例如: 分辨率)">
+                            <input type="text" class="form-control spec-value" placeholder="规格值 (例如: 4K)">
+                            <button type="button" class="remove-spec">×</button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-spec" id="add-spec">
+                        <i class="bi bi-plus"></i>添加规格
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">许可和权利</h2>
+                <div class="form-group">
+                    <label for="license">版权许可</label>
+                    <select id="license" name="license" class="form-control" required>
+                        <option value="" disabled selected>选择许可类型</option>
+                        <option value="all-rights-reserved">保留所有权利</option>
+                        <option value="creative-commons">知识共享署名 (CC BY)</option>
+                        <option value="creative-commons-nc">知识共享署名-非商业性使用 (CC BY-NC)</option>
+                        <option value="creative-commons-nd">知识共享署名-禁止演绎 (CC BY-ND)</option>
+                        <option value="public-domain">公共领域</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="original-work" name="original-work" required>
+                        <label for="original-work">我确认这是我的原创作品或我拥有所有必要的权利</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">我同意网站的服务条款和内容政策</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-container" id="progress-container">
+                <div class="progress-status">
+                    <span id="progress-text">正在上传...</span>
+                    <span id="progress-percentage">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div id="upload-status"></div>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn" id="submit-btn">上传作品</button>
+                <button type="button" class="btn btn-secondary" id="save-draft">保存草稿</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 粒子库 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- 自定义脚本 -->
+    <script src="js/upload.js"></script>
+</body>
+</html> 
