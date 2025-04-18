@@ -45,7 +45,12 @@
     "description": "根据CAD对设备进行建模还原，并进行PBR材质的制作，在Unity中还原真实地下巷道场景，通过骨骼绑定还原采煤机，液压支架三级联动动画等设备的运行动画。",
     "videoLink": "",
     "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E9%87%87%E7%85%A4.png",
-    "tags": [],
-    "createTime": "2025-04-18T17:56:49.788Z"
+    "tags": [
+      "数字孪生",
+      "Unity技术美术",
+      "WebGL"
+    ],
+    "createTime": "2025-04-18T17:56:49.788Z",
+    "updateTime": "2025-04-18T17:57:23.817Z"
   }
 ]
