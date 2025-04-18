@@ -1,12 +1,16 @@
 [
   {
     "id": "1744977754081",
-    "title": "111",
-    "description": "111",
-    "videoLink": "1111",
+    "title": "K-2SO机器人",
+    "description": "作品描述：使用MAYA进行建模，并进行UV拆分，在Substance Painter中进行贴图绘制并渲染",
+    "videoLink": "",
     "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/K2-so.png",
-    "tags": [],
-    "createTime": "2025-04-18T12:02:34.081Z"
+    "tags": [
+      "MAYA建模",
+      "SP贴图绘制"
+    ],
+    "createTime": "2025-04-18T12:02:34.081Z",
+    "updateTime": "2025-04-18T17:50:30.153Z"
   },
   {
     "id": "1744978248902",
