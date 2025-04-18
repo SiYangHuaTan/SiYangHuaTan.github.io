@@ -18,7 +18,12 @@
     "description": "使用MAYA建模及UV拆分，Substance Painter进行贴图绘制并渲染",
     "videoLink": "",
     "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/xiaomi14.png",
-    "tags": [],
-    "createTime": "2025-04-18T17:53:15.791Z"
+    "tags": [
+      "MAYA建模",
+      "SP贴图绘制",
+      "产品建模"
+    ],
+    "createTime": "2025-04-18T17:53:15.791Z",
+    "updateTime": "2025-04-18T17:53:52.769Z"
   }
 ]
