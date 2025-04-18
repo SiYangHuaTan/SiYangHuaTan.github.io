@@ -1,29 +1,38 @@
 [
   {
     "id": "1744977754081",
-    "title": "K-2SOæºå¨äºº",
-    "description": "ä½åæè¿°ï¼ä½¿ç¨MAYAè¿è¡å»ºæ¨¡ï¼å¹¶è¿è¡UVæåï¼å¨Substance Painterä¸­è¿è¡è´´å¾ç»å¶å¹¶æ¸²æ",
+    "title": "K-2SOÃ¦ÂÂºÃ¥ÂÂ¨Ã¤ÂºÂº",
+    "description": "Ã¤Â½ÂÃ¥ÂÂÃ¦ÂÂÃ¨Â¿Â°Ã¯Â¼ÂÃ¤Â½Â¿Ã§ÂÂ¨MAYAÃ¨Â¿ÂÃ¨Â¡ÂÃ¥Â»ÂºÃ¦Â¨Â¡Ã¯Â¼ÂÃ¥Â¹Â¶Ã¨Â¿ÂÃ¨Â¡ÂUVÃ¦ÂÂÃ¥ÂÂÃ¯Â¼ÂÃ¥ÂÂ¨Substance PainterÃ¤Â¸Â­Ã¨Â¿ÂÃ¨Â¡ÂÃ¨Â´Â´Ã¥ÂÂ¾Ã§Â»ÂÃ¥ÂÂ¶Ã¥Â¹Â¶Ã¦Â¸Â²Ã¦ÂÂ",
     "videoLink": "",
     "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/K2-so.png",
     "tags": [
-      "MAYAå»ºæ¨¡",
-      "SPè´´å¾ç»å¶"
+      "MAYAÃ¥Â»ÂºÃ¦Â¨Â¡",
+      "SPÃ¨Â´Â´Ã¥ÂÂ¾Ã§Â»ÂÃ¥ÂÂ¶"
     ],
     "createTime": "2025-04-18T12:02:34.081Z",
     "updateTime": "2025-04-18T17:50:30.153Z"
   },
   {
     "id": "1744998795791",
-    "title": "小米14Pro产品建模",
-    "description": "使用MAYA建模及UV拆分，Substance Painter进行贴图绘制并渲染",
+    "title": "å°ç±³14Proäº§åå»ºæ¨¡",
+    "description": "ä½¿ç¨MAYAå»ºæ¨¡åUVæåï¼Substance Painterè¿è¡è´´å¾ç»å¶å¹¶æ¸²æ",
     "videoLink": "",
     "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/xiaomi14.png",
     "tags": [
-      "MAYA建模",
-      "SP贴图绘制",
-      "产品建模"
+      "MAYAå»ºæ¨¡",
+      "SPè´´å¾ç»å¶",
+      "äº§åå»ºæ¨¡"
     ],
     "createTime": "2025-04-18T17:53:15.791Z",
     "updateTime": "2025-04-18T17:53:52.769Z"
+  },
+  {
+    "id": "1744998934815",
+    "title": "歼15战斗机",
+    "description": "使用MAYA进行建模及UV拆分，Substance Painter进行贴图绘制及渲染",
+    "videoLink": "",
+    "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E9%A3%9E%E6%9C%BA.png",
+    "tags": [],
+    "createTime": "2025-04-18T17:55:34.815Z"
   }
 ]
