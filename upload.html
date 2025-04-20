@@ -833,9 +833,24 @@
             // 保存到GitHub
             await saveWorksToGitHub(works);
             
-            // 显示成功消息
-            alert('作品上传成功！');
-            window.location.href = 'index.html';
+            // 显示上传成功弹窗
+            const continueUpload = await showUploadSuccessDialog();
+            
+            if (continueUpload) {
+                // 重置表单
+                document.getElementById('uploadForm').reset();
+                document.querySelector('.preview-container').style.display = 'none';
+                document.getElementById('githubPreview').style.display = 'none';
+                document.getElementById('uploadArea').style.display = 'block';
+                // 清空标签容器
+                const tagsContainer = document.getElementById('tagsContainer');
+                if (tagsContainer) {
+                    tagsContainer.innerHTML = '';
+                }
+            } else {
+                // 返回首页
+                window.location.href = 'index.html';
+            }
             
         } catch (error) {
             alert(error.message || '上传失败，请重试');
@@ -843,6 +858,97 @@
         } finally {
             document.querySelector('.loading-overlay').style.display = 'none';
         }
+    }
+
+    // 添加上传成功弹窗函数
+    function showUploadSuccessDialog() {
+        return new Promise((resolve) => {
+            const dialog = document.createElement('div');
+            dialog.className = 'success-dialog';
+            dialog.innerHTML = `
+                <div class="success-content">
+                    <h3>上传成功！</h3>
+                    <p>作品已成功上传到GitHub</p>
+                    <div class="success-buttons">
+                        <button class="continue-btn">继续上传</button>
+                        <button class="return-btn">返回首页</button>
+                    </div>
+                </div>
+            `;
+            
+            // 添加样式
+            const style = document.createElement('style');
+            style.textContent = `
+                .success-dialog {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                }
+                .success-content {
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 30px;
+                    border-radius: 20px;
+                    backdrop-filter: blur(10px);
+                    text-align: center;
+                    width: 300px;
+                }
+                .success-content h3 {
+                    color: white;
+                    margin-bottom: 15px;
+                }
+                .success-content p {
+                    color: rgba(255, 255, 255, 0.8);
+                    margin-bottom: 20px;
+                }
+                .success-buttons {
+                    display: flex;
+                    gap: 10px;
+                    justify-content: center;
+                }
+                .success-buttons button {
+                    padding: 10px 20px;
+                    border-radius: 10px;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 14px;
+                    transition: all 0.3s ease;
+                }
+                .continue-btn {
+                    background: linear-gradient(45deg, #6c63ff, #4a42e0);
+                    color: white;
+                }
+                .return-btn {
+                    background: rgba(255, 255, 255, 0.1);
+                    color: white;
+                }
+                .success-buttons button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(dialog);
+            
+            // 添加按钮事件
+            dialog.querySelector('.continue-btn').addEventListener('click', () => {
+                document.body.removeChild(dialog);
+                document.head.removeChild(style);
+                resolve(true);
+            });
+            
+            dialog.querySelector('.return-btn').addEventListener('click', () => {
+                document.body.removeChild(dialog);
+                document.head.removeChild(style);
+                resolve(false);
+            });
+        });
     }
 
     // 修复GitHub数据获取函数
@@ -1100,6 +1206,11 @@
         const addTagBtn = document.getElementById('addTagBtn');
         const tagsContainer = document.getElementById('tagsContainer');
         
+        if (!tagInput || !addTagBtn || !tagsContainer) {
+            console.error('标签相关元素未找到');
+            return;
+        }
+        
         // 存储已添加的标签
         const tags = new Set();
         
@@ -1135,25 +1246,19 @@
         }
         
         // 按回车添加标签
-        if (tagInput) {
-            tagInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    addTag(this.value);
-                    this.value = '';
-                }
-            });
-        }
+        tagInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTag(this.value);
+                this.value = '';
+            }
+        });
         
         // 点击添加按钮添加标签
-        if (addTagBtn) {
-            addTagBtn.addEventListener('click', function() {
-                if (tagInput) {
-                    addTag(tagInput.value);
-                    tagInput.value = '';
-                }
-            });
-        }
+        addTagBtn.addEventListener('click', function() {
+            addTag(tagInput.value);
+            tagInput.value = '';
+        });
     }
 </script>
 
