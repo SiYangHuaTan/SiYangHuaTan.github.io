@@ -74,5 +74,14 @@
     "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E9%A3%8E%E8%BD%A6.png",
     "tags": [],
     "createTime": "2025-04-20T06:00:16.647Z"
+  },
+  {
+    "id": "1745128904074",
+    "title": "风力发电数字孪生",
+    "description": "根据BIM模型进行对风机的翻模，制作风机运行动画及内部齿轮啮合动画，在Unity利用真实地形数据还原地形,优化植被效果，制作动态天气系统，支持实时切换日/夜/雨/雪效果及ShaderGraph材质特效制作。",
+    "videoLink": "https://www.bilibili.com/video/BV1wRQHYTEfj/?spm_id_from=333.1387.upload.video_card.click&vd_source=f4c4264195c0480d45c74636f4638215",
+    "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E9%A3%8E%E8%BD%A6.png",
+    "tags": [],
+    "createTime": "2025-04-20T06:01:44.074Z"
   }
 ]
