@@ -11,5 +11,14 @@
     ],
     "createTime": "2025-04-20T05:34:08.185Z",
     "updateTime": "2025-04-20T05:39:38.746Z"
+  },
+  {
+    "id": "1745127692668",
+    "title": "小米14Pro产品建模",
+    "description": "使用MAYA建模及UV拆分，Substance Painter进行贴图绘制并渲染",
+    "videoLink": "",
+    "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/xiaomi14.png",
+    "tags": [],
+    "createTime": "2025-04-20T05:41:32.668Z"
   }
 ]
