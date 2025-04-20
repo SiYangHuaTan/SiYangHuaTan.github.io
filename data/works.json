@@ -80,5 +80,14 @@
     ],
     "createTime": "2025-04-20T06:00:16.647Z",
     "updateTime": "2025-04-20T06:04:42.940Z"
+  },
+  {
+    "id": "1745129188336",
+    "title": "洗煤厂数字孪生",
+    "description": "负责制作孪生场景及材质根，据倾斜摄影及现场照片在Unity中还原场景，完成数字孪生中建筑，道路的整体效果和特效表现及性能优化。",
+    "videoLink": "https://www.bilibili.com/video/BV15voeYTELo/?spm_id_from=333.1387.upload.video_card.click&vd_source=f4c4264195c0480d45c74636f4638215",
+    "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E6%B4%97%E7%85%A4%E5%8E%82.png",
+    "tags": [],
+    "createTime": "2025-04-20T06:06:28.336Z"
   }
 ]
