@@ -5,7 +5,10 @@
     "description": "作品描述：使用MAYA进行建模，并进行UV拆分，在Substance Painter中进行贴图绘制并渲染",
     "videoLink": "",
     "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/K2-so.png",
-    "tags": [],
-    "createTime": "2025-04-20T05:34:08.185Z"
+    "tags": [
+      "MAYA建模"
+    ],
+    "createTime": "2025-04-20T05:34:08.185Z",
+    "updateTime": "2025-04-20T05:34:34.498Z"
   }
 ]
