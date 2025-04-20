@@ -42,7 +42,7 @@
     "id": "1745128410860",
     "title": "采煤机工作孪生",
     "description": "根据CAD对设备进行建模还原，并进行PBR材质的制作，在Unity中还原真实地下巷道场景，通过骨骼绑定还原采煤机，液压支架三级联动动画等设备的运行动画。",
-    "videoLink": "",
+    "videoLink": "https://www.bilibili.com/video/BV1fz4y1u719/?spm_id_from=333.1387.homepage.video_card.click&vd_source=f4c4264195c0480d45c74636f4638215",
     "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/采煤.png",
     "tags": [
       "数字孪生",
@@ -50,7 +50,7 @@
       "WebGL"
     ],
     "createTime": "2025-04-20T05:53:30.860Z",
-    "updateTime": "2025-04-20T05:54:20.235Z"
+    "updateTime": "2025-04-20T05:58:01.427Z"
   },
   {
     "id": "1745128573340",
