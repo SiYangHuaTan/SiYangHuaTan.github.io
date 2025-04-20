@@ -24,5 +24,14 @@
     ],
     "createTime": "2025-04-20T05:41:32.668Z",
     "updateTime": "2025-04-20T05:42:14.731Z"
+  },
+  {
+    "id": "1745128170904",
+    "title": "歼15战斗机",
+    "description": "使用MAYA进行建模及UV拆分，Substance Painter进行贴图绘制及渲染",
+    "videoLink": "",
+    "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E9%A3%9E%E6%9C%BA.png",
+    "tags": [],
+    "createTime": "2025-04-20T05:49:30.904Z"
   }
 ]
