@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人作品集</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>个人作品集</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">首页</a></li>
+                    <li><a href="#projects">项目作品</a></li>
+                    <li><a href="#about">关于我</a></li>
+                    <li><a href="upload.html" class="upload-link"><i class="fas fa-cloud-upload-alt"></i> 上传作品</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>欢迎来到我的个人网站</h1>
+                <p>专注于Unity数字孪生、特效开发、3D建模优化</p>
+                <a href="#projects" class="btn btn-primary">查看作品</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects">
+        <div class="container">
+            <div class="header">
+                <h1>作品集</h1>
+                <a href="upload.html" class="upload-btn">
+                    <i class="fas fa-plus"></i>
+                    上传作品
+                </a>
+            </div>
+
+            <!-- GitHub状态显示 -->
+            <div id="github-status" style="display: none;" class="github-status">
+                <span id="github-status-message"></span>
+            </div>
+
+            <!-- 作品列表 -->
+            <div id="works-container" class="works-grid">
+                <!-- 作品将通过JavaScript动态加载 -->
+            </div>
+
+            <!-- 加载动画 -->
+            <div class="loading-overlay">
+                <div class="loading-spinner"></div>
+            </div>
+
+            <!-- 错误信息容器 -->
+            <div id="error-container" style="display: none;" class="error-message">
+                无法加载作品数据，请稍后重试
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">关于我</h2>
+            <div class="about-content">
+                <div class="resume-style">
+                    <div class="resume-header">
+                        <div class="resume-header-text">
+                            <div class="resume-name">田肖剑</div>
+                            <div class="resume-title">Unity技术美术 | 数字孪生开发</div>
+                        </div>
+                    </div>
+                    
+                    <div class="resume-section">
+                        <h3>个人信息</h3>
+                        <div class="contact-grid">
+                            <div class="contact-item">
+                                <i class="fas fa-birthday-cake"></i>
+                                <span><strong>年龄：</strong>24岁</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-user"></i>
+                                <span><strong>性别：</strong>男</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span><strong>电话：</strong>13460047734</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span><strong>邮箱：</strong>1917927087@qq.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span><strong>学历：</strong>本科</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span><strong>求职意向：</strong>Unity技术美术</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="resume-section">
+                        <h3>教育经历</h3>
+                        <div class="resume-item">
+                            <div class="resume-item-header">
+                                <div class="resume-item-title">南通理工学院</div>
+                                <div class="resume-item-company">数字媒体技术专业 本科</div>
+                                <div class="resume-item-date">2019.09 - 2023.06</div>
+                            </div>
+                            <ul class="resume-item-points">
+                                <li>主修课程：数字媒体设计，C#程序开发基础，三维建模，视频剪辑等</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="resume-section">
+                        <h3>个人技能</h3>
+                        <div class="resume-skills">
+                            <div class="resume-skill-category">
+                                <div class="skill-category-name">核心技能</div>
+                                <div class="skill-tags">
+                                    <span class="skill-tag">Unity引擎（ShaderGraph/VFXGraph）</span>
+                                    <span class="skill-tag">PBR全流程</span>
+                                    <span class="skill-tag">Substance Painter贴图绘制</span>
+                                </div>
+                            </div>
+                            
+                            <div class="resume-skill-category">
+                                <div class="skill-category-name">熟悉技能</div>
+                                <div class="skill-tags">
+                                    <span class="skill-tag">BIM翻模</span>
+                                    <span class="skill-tag">CAD图纸解析</span>
+                                    <span class="skill-tag">C#基础开发</span>
+                                    <span class="skill-tag">AI+工作流</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="resume-section">
+                        <h3>工作经历</h3>
+                        <div class="resume-item">
+                            <div class="resume-item-header">
+                                <div class="resume-item-title">南京零一数创信息科技有限公司</div>
+                                <div class="resume-item-company">Unity技术美术</div>
+                                <div class="resume-item-date">2023.04 - 至今</div>
+                            </div>
+                            <ul class="resume-item-points">
+                                <li>根据需求制作三维模型，在Unity3D中搭建三维场景，通过ShaderGraph制作动态材质及特效，配合程序开发完成数字孪生项目的美术制作及功能实现。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="resume-section">
+                        <h3>项目经历</h3>
+                        <div class="projects-experience">
+                            <div class="resume-item">
+                                <div class="resume-item-header">
+                                    <div class="resume-item-title">太原理工大学-采煤机工作孪生（web端）</div>
+                                    <div class="resume-item-company">Unity技术美术</div>
+                                </div>
+                                <ul class="resume-item-points">
+                                    <li>根据CAD对设备进行建模还原，并进行PBR材质的制作，在Unity中还原真实地下巷道场景，通过骨骼绑定还原采煤机、液压支架三级联动动画等设备的运行动画。</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="resume-item">
+                                <div class="resume-item-header">
+                                    <div class="resume-item-title">太原理工大学-选煤厂厂区数字孪生（web端）</div>
+                                    <div class="resume-item-company">Unity技术美术</div>
+                                </div>
+                                <ul class="resume-item-points">
+                                    <li>负责制作孪生场景及材质，根据倾斜摄影及现场照片在Unity中还原场景，完成数字孪生中建筑、道路的整体效果和特效表现及性能优化。</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="resume-item">
+                                <div class="resume-item-header">
+                                    <div class="resume-item-title">湖南科技大学-风场数字孪生（web端/C端）</div>
+                                    <div class="resume-item-company">Unity技术美术</div>
+                                </div>
+                                <ul class="resume-item-points">
+                                    <li>根据BIM模型进行对风机的翻模，制作风机运行动画及内部齿轮啮合动画，在Unity中利用真实地形数据还原地形，优化植被效果，制作动态天气系统，支持实时切换日/夜/雨/雪效果及ShaderGraph材质特效制作。</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="resume-item">
+                                <div class="resume-item-header">
+                                    <div class="resume-item-title">东北石油大学-气田管网（web端）</div>
+                                    <div class="resume-item-company">Unity技术美术</div>
+                                </div>
+                                <ul class="resume-item-points">
+                                    <li>负责制作孪生场景，材质及功能实现，还原工艺流程，通过ShaderGraph、UV特效及粒子特效还原工艺流程中的各阶段效果。</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="resume-item">
+                                <div class="resume-item-header">
+                                    <div class="resume-item-title">长江科学院-水库及水电站孪生</div>
+                                    <div class="resume-item-company">三维建模</div>
+                                </div>
+                                <ul class="resume-item-points">
+                                    <li>结合BIM模型与倾斜摄影技术，实现大坝单体化建模，精度误差<0.5m。</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="resume-item">
+                                <div class="resume-item-header">
+                                    <div class="resume-item-title">汉中未来－污水处理厂数字孪生（web端）</div>
+                                    <div class="resume-item-company">Unity技术美术</div>
+                                </div>
+                                <ul class="resume-item-points">
+                                    <li>负责处理BIM模型，搭建数字孪生场景及材质制作，优化场景性能，帧率从40fps提升至100fps，并能流畅发布web端。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="resume-footer">
+                        <a href="about.html" class="btn btn-primary edit-btn">
+                            <i class="fas fa-edit"></i> 查看详细
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 个人作品集. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <!-- 粒子效果JS库 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://threejs.org/examples/js/libs/stats.min.js"></script>
+    <script src="js/particles-config.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+    // GitHub配置
+    const GITHUB_CONFIG = {
+        owner: 'SiYangHuaTan',
+        repo: 'SiYangHuaTan.github.io',
+        branch: 'main',
+        token: '', // 初始为空
+        worksFile: 'data/works.json'
+    };
+
+    // 从GitHub获取作品数据
+    async function fetchWorksFromGitHub() {
+        try {
+            // 尝试从localStorage加载token
+            const savedToken = localStorage.getItem('github_token');
+            if (savedToken) {
+                console.log('从localStorage加载GitHub Token');
+                GITHUB_CONFIG.token = savedToken;
+            }
+
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.worksFile}`, {
+                headers: {
+                    'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+
+            if (response.status === 404) {
+                console.log('没有找到作品数据文件');
+                return [];
+            }
+
+            if (!response.ok) {
+                throw new Error(`API请求失败: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            try {
+                // 安全解码内容
+                const content = data.content.replace(/\s/g, ''); // 移除所有空白字符
+                const decoded = atob(content);
+                
+                // 使用TextDecoder处理UTF-8编码
+                const decoder = new TextDecoder('utf-8');
+                const utf8Bytes = new Uint8Array(decoded.length);
+                for (let i = 0; i < decoded.length; i++) {
+                    utf8Bytes[i] = decoded.charCodeAt(i);
+                }
+                const jsonString = decoder.decode(utf8Bytes);
+                
+                const works = JSON.parse(jsonString);
+                console.log('成功获取作品数据:', works.length);
+                return works;
+            } catch (decodeError) {
+                console.error('解码数据失败:', decodeError);
+                return [];
+            }
+        } catch (error) {
+            console.error('获取作品数据失败:', error);
+            return [];
+        }
+    }
+
+    // 显示GitHub状态
+    function showGitHubStatus(type, message) {
+        const statusElement = document.getElementById('github-status');
+        if (statusElement) {
+            statusElement.style.display = 'block';
+            statusElement.className = `github-status ${type}`;
+            const messageElement = statusElement.querySelector('#github-status-message');
+            if (messageElement) {
+                messageElement.textContent = message;
+            }
+        }
+    }
+
+    // 创建作品卡片
+    function createWorkCard(work) {
+        const workElement = document.createElement('div');
+        workElement.className = 'work-card';
+        
+        // 创建图片容器和图片
+        const imageContainer = document.createElement('div');
+        imageContainer.className = 'work-image-container';
+        
+        const imageElement = document.createElement('div');
+        imageElement.className = 'work-image';
+        
+        // 使用previewImage作为背景图片源，确保不会出现undefined错误
+        const imageUrl = work.previewImage || 'https://via.placeholder.com/800x450?text=无图片';
+        imageElement.style.backgroundImage = `url(${imageUrl})`;
+        
+        // 创建悬停时的叠加层
+        const overlayElement = document.createElement('div');
+        overlayElement.className = 'work-overlay';
+        
+        // 创建标题
+        const titleElement = document.createElement('h3');
+        titleElement.className = 'work-title';
+        titleElement.textContent = work.title;
+        
+        // 创建标签容器
+        const tagsContainer = document.createElement('div');
+        tagsContainer.className = 'tags-container';
+        
+        // 添加标签
+        if (work.tags && work.tags.length > 0) {
+            work.tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'tag';
+                tagElement.textContent = tag;
+                tagsContainer.appendChild(tagElement);
+            });
+        }
+        
+        // 创建查看详情按钮
+        const viewButtonElement = document.createElement('button');
+        viewButtonElement.className = 'view-details-btn';
+        viewButtonElement.textContent = '查看详情';
+        viewButtonElement.onclick = function() {
+            window.location.href = `work-detail.html?id=${work.id}`;
+        };
+        
+        // 组合元素
+        overlayElement.appendChild(titleElement);
+        overlayElement.appendChild(tagsContainer);
+        overlayElement.appendChild(viewButtonElement);
+        
+        imageContainer.appendChild(imageElement);
+        imageContainer.appendChild(overlayElement);
+        
+        workElement.appendChild(imageContainer);
+        
+        return workElement;
+    }
+
+    // 加载并显示作品
+    async function loadWorks() {
+        const container = document.getElementById('works-container');
+        const loadingOverlay = document.querySelector('.loading-overlay');
+        const errorContainer = document.getElementById('error-container');
+        
+        // 重置显示状态
+        if (container) container.innerHTML = '';
+        if (errorContainer) errorContainer.style.display = 'none';
+        if (container) container.style.display = 'grid';
+        
+        try {
+            if (loadingOverlay) loadingOverlay.style.display = 'flex';
+            
+            console.log('开始从GitHub获取作品数据...');
+            const works = await fetchWorksFromGitHub();
+            console.log('获取到作品数据:', works);
+            
+            if (!works) {
+                throw new Error('获取作品数据失败，请检查网络连接和GitHub配置');
+            }
+            
+            if (!Array.isArray(works)) {
+                console.error('获取到的数据不是数组类型:', works);
+                throw new Error('数据格式错误：获取到的作品数据不是有效的数组');
+            }
+            
+            if (works.length === 0) {
+                console.log('没有找到任何作品');
+                container.innerHTML = '<p class="no-works">暂无作品，请点击上方的"上传作品"添加新作品</p>';
+                return;
+            }
+            
+            // 按创建时间正序排序（最新的在最后）
+            console.log('按时间排序作品...');
+            works.sort((a, b) => {
+                const dateA = a.createTime ? new Date(a.createTime) : new Date(0);
+                const dateB = b.createTime ? new Date(b.createTime) : new Date(0);
+                return dateA - dateB;
+            });
+            
+            // 清空容器
+            container.innerHTML = '';
+            
+            // 添加作品卡片
+            console.log('开始创建作品卡片...');
+            works.forEach((work, index) => {
+                console.log(`处理第 ${index+1} 个作品:`, work.title || '未命名作品');
+                try {
+                    // 确保work对象和必要的属性存在
+                    if (!work) {
+                        console.error(`第 ${index+1} 个作品数据无效，跳过显示`);
+                        return;
+                    }
+                    
+                    if (!work.id) {
+                        console.warn(`第 ${index+1} 个作品缺少ID，可能无法正常访问详情页`);
+                        work.id = `temp-${index}`;
+                    }
+                    
+                    const card = createWorkCard(work);
+                    container.appendChild(card);
+                } catch (cardError) {
+                    console.error(`创建第 ${index+1} 个作品卡片失败:`, cardError, work);
+                }
+            });
+            
+            console.log('所有作品加载完成');
+            showGitHubStatus('success', `成功加载 ${works.length} 个作品`);
+            
+        } catch (error) {
+            console.error('加载作品失败:', error);
+            
+            // 显示错误信息
+            showGitHubStatus('error', '加载作品失败: ' + error.message);
+            
+            if (container) container.style.display = 'none';
+            if (errorContainer) {
+                errorContainer.textContent = '加载失败: ' + error.message;
+                errorContainer.style.display = 'block';
+            } else {
+                // 如果错误容器不存在，使用普通容器显示错误
+                if (container) {
+                    container.innerHTML = `<p class="error-message">加载失败: ${error.message}</p>`;
+                    container.style.display = 'block';
+                }
+            }
+        } finally {
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
+        }
+    }
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        // 尝试从localStorage加载token
+        const savedToken = localStorage.getItem('github_token');
+        if (savedToken) {
+            GITHUB_CONFIG.token = savedToken;
+            console.log('从localStorage加载GitHub Token');
+        }
+        
+        // 加载作品
+        loadWorks();
+    });
+    </script>
+
+    <style>
+    /* 修改为单列布局，每行一个作品 */
+    .works-grid {
+        display: grid;
+        grid-template-columns: 1fr; /* 修改为单列 */
+        gap: 30px;
+        padding: 20px;
+        max-width: 1000px; /* 减小最大宽度 */
+        margin: 0 auto;
+    }
+
+    .work-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+        cursor: pointer;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .work-image-container {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .work-image {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 21/9; /* 更宽的比例 */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: rgba(0, 0, 0, 0.2); /* 背景色，图片加载失败时显示 */
+    }
+
+    .work-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .work-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .work-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .work-card:hover .work-overlay {
+        opacity: 1;
+    }
+
+    .work-overlay h3 {
+        color: white;
+        margin-bottom: 10px;
+        font-size: 1.5em;
+    }
+
+    .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    .tag {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8em;
+    }
+
+    .view-details-btn {
+        background: linear-gradient(45deg, #6c63ff, #4a42e0);
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .view-details-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .no-works, .error-message {
+        text-align: center;
+        color: white;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+    }
+
+    .error-message {
+        color: #ff4d4d;
+        background: rgba(255, 0, 0, 0.1);
+    }
+
+    /* GitHub状态样式 */
+    .github-status {
+        padding: 10px 15px;
+        border-radius: 10px;
+        margin: 15px auto;
+        max-width: 800px;
+        text-align: center;
+        display: none;
+    }
+
+    .github-status.success {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+    }
+
+    .github-status.warning {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+    }
+
+    .github-status.error {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+    }
+
+    /* 加载动画 */
+    .loading-overlay {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 40px 0;
+    }
+
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #6c63ff;
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    </style>
+</body>
+</html> 

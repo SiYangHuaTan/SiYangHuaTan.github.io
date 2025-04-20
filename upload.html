@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件上传 - 创意资源分享平台</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/upload.css">
+</head>
+<body>
+    <!-- 自定义光标 -->
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
+
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+    
+    <!-- 加载动画 -->
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-arrow-left"></i> 返回主页
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1>上传您的创意作品</h1>
+            <p>分享您的灵感，连接全球创意社区。支持图片、视频和音频文件上传，让您的作品被更多人发现。</p>
+        </header>
+
+        <!-- 在form表单前添加GitHub状态显示 -->
+        <div id="github-status" style="display: none;" class="github-status">
+            <span id="github-status-message"></span>
+                </div>
+                
+        <!-- 作品图片上传 -->
+                <div class="form-group">
+            <label for="previewImageInput">作品预览图 *</label>
+            <div class="upload-area" id="uploadArea">
+                <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <div class="upload-text">
+                    点击或拖拽图片至此处<br>
+                    <small>支持JPG、PNG格式</small>
+                </div>
+                <input type="file" id="previewImageInput" accept="image/jpeg, image/png" hidden>
+            </div>
+            <div class="preview-container" style="display: none;">
+                <img id="previewImageDisplay" alt="预览图">
+                <button type="button" class="remove-preview">删除</button>
+            </div>
+            <div class="form-text">请上传作品预览图片，建议尺寸比例为4:3。</div>
+            
+            <!-- GitHub图片选择区域 -->
+                <div class="form-group">
+                <div class="github-checkbox">
+                    <input type="checkbox" id="useGithub">
+                    <label for="useGithub">使用GitHub图片</label>
+                </div>
+                <div class="github-input" id="githubInputContainer" style="display:none;">
+                    <p class="github-hint">从下拉列表选择图片或直接输入GitHub图片URL</p>
+                    <select class="github-select" id="githubSelect">
+                        <option value="">选择GitHub图片</option>
+                    </select>
+                    <input type="text" class="github-url" id="githubUrl" placeholder="输入GitHub图片URL">
+                    <div class="github-preview" id="githubPreview" style="display:none;">
+                        <img src="" alt="GitHub预览" onerror="this.onerror=null; alert('加载图片失败，请检查URL是否正确');">
+                        <button type="button" class="remove-preview">移除</button>
+                </div>
+                </div>
+            </div>
+                </div>
+                
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-wrapper">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-info">
+                <span class="progress-text" id="progressText">正在上传... 0%</span>
+                <span class="progress-text" id="progressSize">0MB / 0MB</span>
+            </div>
+                </div>
+            </div>
+
+    <!-- 作品信息 -->
+            <div class="card">
+        <div class="card-header">
+            <div class="step-number">2</div>
+            <h2>作品信息</h2>
+                </div>
+                
+        <!-- 添加存储空间使用情况显示 -->
+        <div class="storage-info">
+            <div class="storage-bar">
+                <div class="storage-progress" id="storageProgress"></div>
+            </div>
+            <div class="storage-text" id="storageText">存储空间使用情况：0MB / 10MB</div>
+            </div>
+
+        <form id="uploadForm">
+                <div class="form-group">
+                <label for="workTitle" class="required">作品标题</label>
+                <input type="text" id="workTitle" name="workTitle" class="form-control" placeholder="为您的作品取一个引人注目的标题">
+                <span class="helper-text">一个好的标题能够提高作品被发现的几率</span>
+                </div>
+                
+                <div class="form-group">
+                <label for="workDescription">作品描述</label>
+                <textarea id="workDescription" class="form-control" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                <label for="workVideoLink">视频链接</label>
+                <input type="text" id="workVideoLink" class="form-control">
+                <small class="form-text">可选，支持B站、YouTube等平台链接</small>
+                        </div>
+                
+                <div class="form-group">
+                <label>标签</label>
+                <div class="tags-container" id="tagsContainer">
+                    <!-- 标签将通过JavaScript动态添加 -->
+                    </div>
+                <div class="tag-input-container">
+                    <input type="text" id="tagInput" class="form-control" placeholder="输入标签后按回车添加">
+                    <button type="button" class="add-tag-btn" id="addTagBtn">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-container">
+                    <input type="checkbox" id="terms" name="terms">
+                    <label for="terms" class="required">我确认拥有该作品的版权，并同意平台的使用条款</label>
+                    </div>
+                </div>
+
+            <div class="btn-container">
+                <button type="button" id="saveDraft" class="btn btn-secondary">
+                    <i class="fas fa-save"></i> 保存草稿
+                </button>
+                <button type="submit" id="submitBtn" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> 提交作品
+                </button>
+                    </div>
+        </form>
+                </div>
+            </div>
+
+<!-- 消息提示 -->
+<div class="message" id="message"></div>
+
+<!-- 脚本加载顺序调整 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    // 全局错误处理
+    window.onerror = function(msg, url, line, col, error) {
+        console.error('发生错误:', {
+            message: msg,
+            url: url,
+            line: line,
+            column: col,
+            error: error
+        });
+        return false;
+    };
+
+    // 保存原始的console函数
+    const originalLog = console.log;
+    const originalError = console.error;
+
+    // 添加可视化反馈
+    console.log = function() {
+        originalLog.apply(console, arguments);
+        if (arguments[0] && typeof arguments[0] === 'string') {
+            if (arguments[0].includes('GitHub') || arguments[0].includes('github')) {
+                debugAlert(arguments[0]);
+            }
+        }
+    };
+
+    console.error = function() {
+        originalError.apply(console, arguments);
+        if (arguments[0] && typeof arguments[0] === 'string') {
+            debugAlert('错误: ' + arguments[0]);
+        }
+    };
+
+    // 调试消息显示
+    function debugAlert(message) {
+        const debugMsg = document.createElement('div');
+        debugMsg.style.position = 'fixed';
+        debugMsg.style.top = '10px';
+        debugMsg.style.left = '50%';
+        debugMsg.style.transform = 'translateX(-50%)';
+        debugMsg.style.padding = '10px 20px';
+        debugMsg.style.background = 'rgba(0, 0, 0, 0.7)';
+        debugMsg.style.color = 'white';
+        debugMsg.style.borderRadius = '5px';
+        debugMsg.style.zIndex = '9999';
+        debugMsg.textContent = message;
+        document.body.appendChild(debugMsg);
+        setTimeout(() => debugMsg.remove(), 3000);
+    }
+
+    // 确保所有依赖加载完成
+    window.addEventListener('load', function() {
+        if (typeof particlesJS === 'undefined') {
+            console.error('粒子库加载失败');
+            document.querySelector('.loading-overlay').classList.add('hidden');
+        } else {
+            initParticles();
+        }
+    });
+
+    // 全局变量声明
+    let previewContainer, previewImage, removePreview;
+
+    // 确保DOM加载完毕后执行初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            // 初始化自定义光标
+            initCustomCursor();
+            
+            // 初始化GitHub API
+            initGitHubAPI().then(success => {
+                if (success) {
+                    console.log('GitHub API初始化成功');
+                }
+            });
+
+            // 初始化表单提交
+            initFormSubmission();
+            
+            // 初始化文件上传
+            initFileUpload();
+            
+            // 初始化标签管理
+            initTagManagement();
+            
+            // 添加GitHub图片选择器的手动触发代码
+            const useGithubCheckbox = document.getElementById('useGithub');
+            if (useGithubCheckbox) {
+                // 添加延迟触发器，确保所有DOM元素都已加载
+                setTimeout(() => {
+                    if (useGithubCheckbox.checked) {
+                        handleGithubImageToggle();
+                    }
+                }, 500);
+            }
+            
+        } catch (error) {
+            console.error('初始化失败:', error);
+        }
+    });
+
+    // 自定义光标初始化函数
+    function initCustomCursor() {
+        const cursor = document.getElementById('cursor');
+        const cursorRing = document.getElementById('cursor-ring');
+        
+        if (!cursor || !cursorRing) {
+            console.error('光标元素不存在，无法初始化自定义光标');
+            return;
+        }
+        
+        document.body.style.cursor = 'none';
+        
+        document.addEventListener('mousemove', function(e) {
+            cursor.style.left = e.clientX - 4 + 'px';
+            cursor.style.top = e.clientY - 4 + 'px';
+            cursorRing.style.left = e.clientX - 12 + 'px';
+            cursorRing.style.top = e.clientY - 12 + 'px';
+        });
+        
+        // 鼠标悬停效果
+        document.querySelectorAll('a, button, input, textarea, select, .upload-area, .remove-preview').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                cursor.style.transform = 'scale(1.5)';
+                cursorRing.style.width = '30px';
+                cursorRing.style.height = '30px';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                cursor.style.transform = 'scale(1)';
+                cursorRing.style.width = '24px';
+                cursorRing.style.height = '24px';
+            });
+        });
+        
+        console.log('自定义光标初始化完成');
+    }
+
+    // 修改表单提交初始化
+    function initFormSubmission() {
+        const uploadForm = document.getElementById('uploadForm');
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', handleFormSubmit);
+            console.log('表单提交事件监听器已添加');
+        } else {
+            console.error('未找到上传表单元素');
+        }
+    }
+
+    // 确保DOM加载完毕后执行初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        // 初始化预览相关元素
+        previewContainer = document.querySelector('.preview-container');
+        previewImage = document.getElementById('previewImageDisplay');
+        removePreview = document.querySelector('.remove-preview');
+        
+        // 确保密码保护正常运行
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordSubmit = document.getElementById('passwordSubmit');
+        const errorMessage = document.getElementById('errorMessage');
+        const formContainer = document.querySelector('.card:last-child');
+        
+        // 初始隐藏表单内容
+        if (formContainer) {
+            formContainer.style.display = 'none';
+        }
+        
+        // 显示密码模态框
+        if (passwordModal) {
+            passwordModal.classList.add('show');
+            passwordInput.focus();
+        }
+        
+        // 处理密码提交
+        if (passwordSubmit) {
+            passwordSubmit.addEventListener('click', function() {
+                if (passwordInput.value === '5415') {
+                    passwordModal.classList.remove('show');
+                    // 显示Token配置界面
+                    const tokenConfigModal = document.getElementById('tokenConfigModal');
+                    if (tokenConfigModal) {
+                        tokenConfigModal.style.display = 'flex';
+                    }
+                } else {
+                    errorMessage.style.display = 'block';
+                    passwordInput.value = '';
+                }
+            });
+        }
+        
+        // 按回车键提交密码
+        if (passwordInput) {
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    passwordSubmit.click();
+                }
+            });
+        }
+        
+        // 点击模态框外部关闭
+        if (passwordModal) {
+            passwordModal.addEventListener('click', function(e) {
+                if (e.target === passwordModal) {
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+        
+        // 初始化文件上传功能
+        const fileInput = document.getElementById('previewImageInput');
+        const uploadArea = document.getElementById('uploadArea');
+        
+        if (uploadArea && fileInput) {
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // 文件拖放功能
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            // 拖拽效果
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, function() {
+                    uploadArea.classList.add('highlight');
+                });
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, function() {
+                    uploadArea.classList.remove('highlight');
+                });
+            });
+            
+            // 处理文件拖放
+            uploadArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length > 0) {
+                    handleFileUpload(files[0]);
+                }
+            });
+            
+            // 处理文件选择
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            });
+        }
+        
+        // 处理文件上传
+        function handleFileUpload(file) {
+            if (!file) return;
+            
+            if (file.type === 'image/jpeg' || file.type === 'image/png') {
+                if (file.size <= 10 * 1024 * 1024) { // 10MB
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (previewImage) {
+                            previewImage.src = e.target.result;
+                            previewContainer.style.display = 'block';
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('文件大小不能超过10MB');
+                    if (fileInput) fileInput.value = '';
+                }
+            } else {
+                alert('只支持JPG和PNG格式的图片');
+                if (fileInput) fileInput.value = '';
+            }
+        }
+        
+        // 删除预览图
+        if (removePreview) {
+            removePreview.addEventListener('click', function() {
+                if (previewContainer) previewContainer.style.display = 'none';
+                if (fileInput) fileInput.value = '';
+            });
+        }
+        
+        // 初始化GitHub相关功能
+        initGithubFeatures();
+    });
+
+    // GitHub功能初始化
+    function initGithubFeatures() {
+        const useGithubCheckbox = document.getElementById('useGithub');
+        const githubInputContainer = document.getElementById('githubInputContainer');
+        const githubSelect = document.getElementById('githubSelect');
+        const githubUrl = document.getElementById('githubUrl');
+        const uploadArea = document.getElementById('uploadArea');
+        
+        // 加载GitHub示例图片
+        loadGithubImages();
+        
+        // GitHub复选框切换
+        if (useGithubCheckbox) {
+            useGithubCheckbox.addEventListener('change', handleGithubImageToggle);
+            console.log('已添加GitHub图片选择器切换事件');
+        }
+        
+        // GitHub图片选择
+        if (githubSelect) {
+            githubSelect.addEventListener('change', function() {
+                if (this.value) {
+                    handleGithubImageSelection(this.value);
+                    if (githubUrl) githubUrl.value = this.value;
+                }
+            });
+        }
+        
+        // GitHub URL输入
+        if (githubUrl) {
+            githubUrl.addEventListener('change', function() {
+                if (this.value) {
+                    handleGithubImageSelection(this.value);
+                    if (githubSelect) githubSelect.value = '';
+                }
+            });
+        }
+
+        // 删除GitHub预览
+        const githubPreview = document.getElementById('githubPreview');
+        if (githubPreview) {
+            const removeButton = githubPreview.querySelector('.remove-preview');
+            if (removeButton) {
+                removeButton.addEventListener('click', function() {
+                    githubPreview.style.display = 'none';
+                    if (githubSelect) githubSelect.value = '';
+                    if (githubUrl) githubUrl.value = '';
+                    const fileInput = document.getElementById('previewImageInput');
+                    if (fileInput) fileInput.value = '';
+                });
+            }
+        }
+    }
+
+    // 修复GitHub图片选择器
+    function handleGithubImageToggle() {
+        console.log('处理GitHub图片选择切换');
+        const useGithubCheckbox = document.getElementById('useGithub');
+        const githubInputContainer = document.getElementById('githubInputContainer');
+        const uploadArea = document.getElementById('uploadArea');
+        
+        if (!useGithubCheckbox || !githubInputContainer || !uploadArea) {
+            console.error('找不到GitHub相关元素');
+            return;
+        }
+        
+        if (useGithubCheckbox.checked) {
+            githubInputContainer.style.display = 'block';
+            uploadArea.style.display = 'none';
+            // 强制加载GitHub图片列表
+            loadGithubImages();
+        } else {
+            githubInputContainer.style.display = 'none';
+            uploadArea.style.display = 'block';
+        }
+    }
+
+    // 处理GitHub图片选择
+    async function handleGithubImageSelection(url) {
+        try {
+            if (!url) {
+                throw new Error('请提供有效的图片URL');
+            }
+
+            const githubPreview = document.getElementById('githubPreview');
+            const previewImg = githubPreview.querySelector('img');
+            
+            if (!previewImg) {
+                throw new Error('预览元素不存在');
+            }
+
+            // 先尝试加载图片
+            await new Promise((resolve, reject) => {
+                const testImg = new Image();
+                testImg.crossOrigin = 'anonymous';
+                testImg.onload = resolve;
+                testImg.onerror = () => reject(new Error('图片加载失败'));
+                testImg.src = url;
+            });
+
+            // 图片加载成功后更新预览
+            previewImg.src = url;
+            githubPreview.style.display = 'block';
+            
+            try {
+                // 直接使用图片URL创建File对象
+                const response = await fetch(url, {
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'image/jpeg, image/png, image/*'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const blob = await response.blob();
+                if (!blob.type.startsWith('image/')) {
+                    throw new Error('获取的不是图片文件');
+                }
+
+                const file = new File([blob], 'github-image.png', { type: blob.type });
+                const fileInput = document.getElementById('previewImageInput');
+                
+                if (fileInput && window.DataTransfer) {
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
+                    
+                    // 触发change事件
+                    const event = new Event('change', { bubbles: true });
+                    fileInput.dispatchEvent(event);
+                }
+            } catch (error) {
+                console.error('处理GitHub图片时出错:', error);
+                alert('无法处理GitHub图片，请尝试其他图片或直接上传本地图片');
+                githubPreview.style.display = 'none';
+                return;
+            }
+        } catch (error) {
+            console.error('处理GitHub图片时出错:', error);
+            alert(error.message || '加载GitHub图片失败，请重试');
+            if (githubPreview) {
+                githubPreview.style.display = 'none';
+            }
+        }
+    }
+
+    // GitHub配置
+    const GITHUB_CONFIG = {
+        owner: 'SiYangHuaTan',
+        repo: 'SiYangHuaTan.github.io',
+        branch: 'main',
+        token: '', // 初始为空，将从localStorage加载
+        worksFile: 'data/works.json'
+    };
+
+    // 初始化GitHub API
+    async function initGitHubAPI() {
+        try {
+            // 尝试从localStorage加载token
+            const savedToken = localStorage.getItem('github_token');
+            if (savedToken) {
+                console.log('从localStorage加载GitHub Token');
+                GITHUB_CONFIG.token = savedToken;
+            }
+
+            if (!GITHUB_CONFIG.token) {
+                showGitHubStatus('warning', '请配置GitHub Token以启用数据同步');
+                return false;
+            }
+
+            // 测试API连接和写入权限
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}`, {
+                headers: {
+                    'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`GitHub API连接失败: ${response.status}`);
+            }
+
+            // 检查Token权限
+            const userResponse = await fetch(`https://api.github.com/user`, {
+                headers: {
+                    'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            
+            if (!userResponse.ok) {
+                throw new Error('无法验证Token权限');
+            }
+            
+            const userData = await userResponse.json();
+            console.log(`已验证GitHub用户: ${userData.login}`);
+            
+            showGitHubStatus('success', `GitHub连接成功，用户: ${userData.login}`);
+            return true;
+        } catch (error) {
+            console.error('GitHub API初始化失败:', error);
+            showGitHubStatus('error', 'GitHub连接失败: ' + error.message);
+            return false;
+        }
+    }
+
+    // 显示GitHub状态
+    function showGitHubStatus(type, message) {
+        const statusElement = document.getElementById('github-status');
+        if (statusElement) {
+            statusElement.style.display = 'block';
+            statusElement.className = `github-status ${type}`;
+            const messageElement = statusElement.querySelector('#github-status-message');
+            if (messageElement) {
+                messageElement.textContent = message;
+            }
+        }
+    }
+
+    // 保存作品数据到GitHub
+    async function saveWorksToGitHub(works) {
+        try {
+            // 检查Token是否已配置
+            if (!GITHUB_CONFIG.token) {
+                throw new Error('请先配置GitHub Token');
+            }
+            
+            showGitHubStatus('warning', '正在保存作品数据到GitHub...');
+            
+            // 获取现有文件的SHA（如果存在）
+            let sha = '';
+            try {
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.worksFile}`, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                // 如果文件存在，获取SHA
+                if (response.ok) {
+                    const data = await response.json();
+                    sha = data.sha;
+                    console.log('找到现有文件，SHA:', sha);
+                } else if (response.status === 404) {
+                    console.log('文件不存在，将创建新文件');
+                } else {
+                    throw new Error(`获取文件信息失败: ${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                console.log('获取文件信息时出错:', error.message);
+                if (!error.message.includes('404')) {
+                    throw error;
+                }
+            }
+
+            // 使用正确的编码方式处理中文
+            const jsonString = JSON.stringify(works, null, 2);
+            console.log('JSON字符串预览:', jsonString.substring(0, 100) + '...');
+            
+            // 将字符串转换为UTF-8编码的Uint8Array
+            const encoder = new TextEncoder();
+            const utf8Bytes = encoder.encode(jsonString);
+            
+            // 转换为Base64
+            const base64Content = btoa(
+                Array.from(utf8Bytes)
+                    .map(byte => String.fromCharCode(byte))
+                    .join('')
+            );
+            
+            // 准备更新或创建文件
+            const body = {
+                message: '更新作品数据',
+                content: base64Content,
+                branch: GITHUB_CONFIG.branch
+            };
+
+            if (sha) {
+                body.sha = sha;
+            }
+            
+            console.log('准备保存数据，文件路径:', GITHUB_CONFIG.worksFile);
+
+            // 发送请求创建/更新文件
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.worksFile}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify(body)
+            });
+
+            const responseData = await response.json();
+            
+            if (!response.ok) {
+                console.error('API错误响应:', responseData);
+                if (responseData.message.includes('personal access token')) {
+                    throw new Error('Token权限不足，请确保您的Token有仓库写入权限');
+                } else {
+                    throw new Error(`保存失败: ${responseData.message}`);
+                }
+            }
+
+            showGitHubStatus('success', '作品数据保存成功！');
+            console.log('作品数据保存成功');
+            return true;
+        } catch (error) {
+            console.error('保存作品数据失败:', error);
+            showGitHubStatus('error', '保存失败: ' + error.message);
+            throw error;
+        }
+    }
+
+    // 修改表单提交处理
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+        
+        try {
+            // 验证GitHub配置
+            if (!await initGitHubAPI()) {
+                throw new Error('请先配置GitHub Token');
+            }
+
+            // 验证必填字段
+            const title = document.getElementById('workTitle').value.trim();
+            const description = document.getElementById('workDescription').value.trim();
+            const termsAgreement = document.getElementById('terms').checked;
+            
+            if (!title) throw new Error('请输入作品标题');
+            if (!description) throw new Error('请输入作品描述');
+            if (!termsAgreement) throw new Error('请同意上传条款');
+            
+            // 获取预览图片
+            const fileInput = document.getElementById('previewImageInput');
+            if (!fileInput.files[0] && !document.querySelector('#githubPreview img').src) {
+                throw new Error('请上传预览图片或选择GitHub图片');
+            }
+            
+            // 显示加载动画
+            document.querySelector('.loading-overlay').style.display = 'flex';
+            
+            // 获取图片数据
+            let previewImage;
+            if (document.getElementById('useGithub').checked) {
+                previewImage = document.querySelector('#githubPreview img').src;
+            } else {
+                previewImage = await compressImage(fileInput.files[0]);
+            }
+            
+            // 收集标签
+            const tags = Array.from(document.querySelectorAll('.tag'))
+                .map(tag => tag.textContent.trim())
+                .filter(Boolean);
+            
+            // 创建作品对象
+            const work = {
+                id: Date.now().toString(),
+                title: title,
+                description: description,
+                videoLink: document.getElementById('workVideoLink').value.trim(),
+                previewImage: previewImage,
+                tags: tags,
+                createTime: new Date().toISOString()
+            };
+            
+            // 从GitHub获取现有作品
+            const existingWorks = await fetchWorksFromGitHub() || [];
+            
+            // 将新作品添加到数组末尾
+            const works = [...existingWorks, work];
+            
+            // 保存到GitHub
+            await saveWorksToGitHub(works);
+            
+            // 显示成功消息
+            alert('作品上传成功！');
+            window.location.href = 'index.html';
+            
+        } catch (error) {
+            alert(error.message || '上传失败，请重试');
+            console.error('上传失败:', error);
+        } finally {
+            document.querySelector('.loading-overlay').style.display = 'none';
+        }
+    }
+
+    // 修复GitHub数据获取函数
+    async function fetchWorksFromGitHub() {
+        try {
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.worksFile}`, {
+                headers: {
+                    'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+
+            if (response.status === 404) {
+                console.log('没有找到作品数据文件，将创建新文件');
+                return [];
+            }
+
+            if (!response.ok) {
+                throw new Error(`API请求失败: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            try {
+                // 安全解码内容
+                const content = data.content.replace(/\s/g, ''); // 移除所有空白字符
+                const decoded = atob(content);
+                
+                // 使用TextDecoder处理UTF-8编码
+                const decoder = new TextDecoder('utf-8');
+                const utf8Bytes = new Uint8Array(decoded.length);
+                for (let i = 0; i < decoded.length; i++) {
+                    utf8Bytes[i] = decoded.charCodeAt(i);
+                }
+                const jsonString = decoder.decode(utf8Bytes);
+                
+                const works = JSON.parse(jsonString);
+                console.log('成功获取作品数据:', works.length);
+                return works;
+            } catch (decodeError) {
+                console.error('解码数据失败:', decodeError);
+                return [];
+            }
+        } catch (error) {
+            console.error('获取作品数据失败:', error);
+            return [];
+        }
+    }
+
+    // 加载GitHub示例图片
+    function loadGithubImages() {
+        const githubSelectElement = document.getElementById('githubSelect');
+        console.log('加载GitHub图片到选择器');
+        if (!githubSelectElement) {
+            console.error('GitHub选择器元素不存在');
+            return;
+        }
+        
+        // 清空现有选项
+        githubSelectElement.innerHTML = '<option value="">选择GitHub图片</option>';
+        
+        // 用户GitHub仓库中的图片
+        const userImages = [
+            { 
+                name: "K2-so", 
+                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/K2-so.png" 
+            },
+            { 
+                name: "xiaomi14", 
+                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/xiaomi14.png" 
+            },
+            { 
+                name: "家居", 
+                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E5%AE%B6%E5%B1%85.png" 
+            },
+            { 
+                name: "气田", 
+                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E6%B0%94%E7%94%B0.png" 
+            },
+            { 
+                name: "洗煤厂", 
+                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E6%B4%97%E7%85%A4%E5%8E%82.png" 
+            },
+            { 
+                name: "采煤", 
+                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E9%87%87%E7%85%A4.png" 
+            },
+            { 
+                name: "风车", 
+                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E9%A3%8E%E8%BD%A6.png" 
+            },
+            { 
+                name: "飞机", 
+                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E9%A3%9E%E6%9C%BA.png" 
+            }
+        ];
+        
+        // 添加图片选项
+        userImages.forEach((image) => {
+            const option = document.createElement('option');
+            option.value = image.url;
+            option.textContent = image.name;
+            githubSelectElement.appendChild(option);
+            console.log('添加选项:', image.name);
+        });
+        
+        console.log('GitHub选择器已更新，当前选项数:', githubSelectElement.options.length);
+    }
+    
+    // 添加图片压缩函数
+    function compressImage(file, maxWidth = 1200, maxHeight = 900, quality = 0.9) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // 计算缩放比例，保持原始宽高比
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+                    if (height > maxHeight) {
+                        width = (width * maxHeight) / height;
+                        height = maxHeight;
+                    }
+
+                    // 确保图片不会太小
+                    if (width < 400) {
+                        height = (height * 400) / width;
+                        width = 400;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // 使用更好的图片渲染质量
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // 转换为base64，使用更高的质量
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                    resolve(compressedBase64);
+                };
+                img.onerror = reject;
+                img.src = e.target.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    // 辅助函数：将URL转换为File对象
+    async function urlToFile(url, filename) {
+        try {
+            const response = await fetch(url, {
+                mode: 'cors',
+                cache: 'no-cache'
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const blob = await response.blob();
+            return new File([blob], filename, { type: blob.type });
+        } catch (error) {
+            console.error('URL转换为File失败:', error);
+            throw error;
+        }
+    }
+
+    // 更新存储空间信息
+    function updateStorageInfo() {
+        try {
+            const works = JSON.parse(localStorage.getItem('works') || '[]');
+            const worksString = JSON.stringify(works);
+            const usedSize = (worksString.length / 1024 / 1024).toFixed(2);
+            const totalSize = 5; // 5MB
+            const usagePercent = (usedSize / totalSize * 100).toFixed(1);
+            
+            const storageInfo = document.getElementById('storageInfo');
+            if (storageInfo) {
+                storageInfo.textContent = `存储空间: ${usedSize}MB / ${totalSize}MB (${usagePercent}%)`;
+                
+                // 设置存储空间进度条
+                const storageBar = document.getElementById('storageBar');
+                if (storageBar) {
+                    storageBar.style.width = `${usagePercent}%`;
+                    if (usagePercent > 80) {
+                        storageBar.style.backgroundColor = '#ff4d4d';
+                    } else if (usagePercent > 60) {
+                        storageBar.style.backgroundColor = '#ffbb33';
+                    } else {
+                        storageBar.style.backgroundColor = '#4CAF50';
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('更新存储空间信息失败:', error);
+        }
+    }
+
+    // Token配置处理
+    document.addEventListener('DOMContentLoaded', function() {
+        const tokenInput = document.getElementById('tokenInput');
+        const tokenSubmit = document.getElementById('tokenSubmit');
+        const tokenError = document.getElementById('tokenError');
+        const formContainer = document.querySelector('.card:last-child');
+
+        if (tokenSubmit) {
+            tokenSubmit.addEventListener('click', async function() {
+                const token = tokenInput.value.trim();
+                if (!token) {
+                    tokenError.textContent = '请输入Token';
+                    tokenError.style.display = 'block';
+                    return;
+                }
+
+                try {
+                    // 验证Token
+                    const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}`, {
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        // Token有效，保存到localStorage
+                        GITHUB_CONFIG.token = token;
+                        localStorage.setItem('github_token', token);
+                        document.getElementById('tokenConfigModal').style.display = 'none';
+                        if (formContainer) {
+                            formContainer.style.display = 'block';
+                        }
+                        showGitHubStatus('success', 'GitHub Token配置成功，已保存到浏览器');
+                    } else {
+                        throw new Error('Token无效');
+                    }
+                } catch (error) {
+                    tokenError.textContent = error.message || 'Token验证失败，请重试';
+                    tokenError.style.display = 'block';
+                }
+            });
+        }
+    });
+</script>
+
+<div class="password-modal" id="passwordModal">
+    <div class="password-form">
+        <h3>请输入上传密码</h3>
+        <input type="password" class="password-input" id="passwordInput" placeholder="请输入密码">
+        <p class="error-message" id="errorMessage">密码错误，请重试</p>
+        <button class="password-submit" id="passwordSubmit">确认</button>
+                </div>
+            </div>
+
+<div class="token-config-modal" id="tokenConfigModal" style="display: none;">
+    <div class="token-config-form">
+        <h3>配置 GitHub Token</h3>
+        <div class="token-instructions">
+            <p class="token-hint">请按照以下步骤创建并配置GitHub Token:</p>
+            <ol class="token-steps">
+                <li>访问 <a href="https://github.com/settings/tokens" target="_blank">GitHub Token设置</a></li>
+                <li>点击 "Generate new token" > "Generate new token (classic)"</li>
+                <li>为Token添加描述，如"创意资源分享平台"</li>
+                <li><strong>重要:</strong> 在权限中选择 <strong>"repo"</strong> (完整仓库访问权限)</li>
+                <li>点击页面底部的 "Generate token" 按钮</li>
+                <li>复制生成的Token并粘贴到下方</li>
+            </ol>
+            </div>
+        <input type="password" class="token-input" id="tokenInput" placeholder="请输入GitHub Token">
+        <button class="token-submit" id="tokenSubmit">确认</button>
+        <p class="token-hint warning">注意: Token只会显示一次，请妥善保存</p>
+        <p class="token-error" id="tokenError" style="display: none;">Token无效，请重试</p>
+    </div>
+    </div>
+
+<style>
+    /* 添加密码验证相关的样式 */
+    .password-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .password-modal.show {
+        display: flex;
+    }
+
+    .password-form {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        width: 300px;
+    }
+
+    .password-form h3 {
+        color: white;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .password-input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
+
+    .password-input:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .password-submit {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+        background: linear-gradient(45deg, #6c63ff, #4a42e0);
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .password-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .error-message {
+        color: #f44336;
+        text-align: center;
+        margin-top: 10px;
+        display: none;
+    }
+
+    /* 优化图片上传和预览样式 */
+    .file-upload {
+        position: relative;
+        margin: 20px 0;
+    }
+
+    .file-drop-area {
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+        border-radius: 15px;
+        padding: 40px;
+        text-align: center;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+    }
+
+    .file-drop-area:hover {
+        border-color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .file-drop-area.dragover {
+        border-color: #6c63ff;
+        background: rgba(108, 99, 255, 0.1);
+    }
+
+    .file-drop-icon {
+        font-size: 48px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 15px;
+    }
+
+    .file-message {
+        font-size: 18px;
+        color: white;
+        margin-bottom: 10px;
+    }
+
+    .file-hint {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 5px;
+    }
+
+    .file-input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .preview-container {
+        display: none;
+        margin-top: 20px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .preview-wrapper {
+        position: relative;
+        width: 100%;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 10px;
+        aspect-ratio: 4/3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .preview-wrapper img {
+        max-width: 100%;
+        max-height: 100%;
+        height: auto;
+        width: auto;
+        object-fit: contain;
+        border-radius: 10px;
+    }
+
+    .preview-overlay {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .preview-wrapper:hover .preview-overlay {
+        opacity: 1;
+    }
+
+    .remove-preview {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        color: rgba(255, 255, 255, 0.8);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        backdrop-filter: blur(5px);
+    }
+
+    .remove-preview:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        transform: scale(1.05);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* 添加标签相关样式 */
+    .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+        min-height: 40px;
+    }
+
+    .tag {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-size: 0.9em;
+        color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .tag .remove-tag {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+        padding: 0;
+        font-size: 0.8em;
+        transition: all 0.3s ease;
+    }
+
+    .tag .remove-tag:hover {
+        color: rgba(255, 255, 255, 1);
+        transform: scale(1.1);
+    }
+
+    .tag-input-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .tag-input-container .form-control {
+        flex: 1;
+    }
+
+    .add-tag-btn {
+        background: rgba(76, 175, 80, 0.8);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .add-tag-btn:hover {
+        background: rgba(76, 175, 80, 1);
+        transform: translateY(-2px);
+    }
+
+    /* 添加存储空间使用情况样式 */
+    .storage-info {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+
+    .storage-bar {
+        width: 100%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 8px;
+    }
+
+    .storage-progress {
+        height: 100%;
+        background: linear-gradient(45deg, #6c63ff, #4a42e0);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+
+    .storage-text {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9em;
+        text-align: center;
+    }
+
+    /* 调整GitHub相关样式确保显示正确 */
+    .github-checkbox {
+        margin-top: 15px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .github-checkbox input {
+        margin-right: 8px;
+        cursor: pointer;
+    }
+    
+    .github-checkbox label {
+        cursor: pointer;
+    }
+    
+    .github-input {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 10px;
+        border: 1px solid rgba(108, 99, 255, 0.2);
+    }
+    
+    .github-hint {
+        margin-bottom: 15px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9em;
+    }
+    
+    .github-select, .github-url {
+        width: 100%;
+        padding: 12px;
+        background: rgba(30, 30, 30, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+        color: white;
+        margin-bottom: 10px;
+    }
+
+    .github-select:focus, .github-url:focus {
+        border-color: #6c63ff;
+        outline: none;
+    }
+
+    .github-preview {
+        margin-top: 15px;
+        text-align: center;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .github-preview img {
+        max-width: 100%;
+        height: auto;
+        aspect-ratio: 4/3;
+        object-fit: contain;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 10px;
+    }
+
+    .github-preview .remove-preview {
+        margin-top: 10px;
+        width: auto;
+        height: auto;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .github-preview .remove-preview:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    /* GitHub状态提示样式 */
+    .github-status {
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .github-status.success {
+        background-color: rgba(40, 167, 69, 0.2);
+        border: 1px solid rgba(40, 167, 69, 0.3);
+        color: #28a745;
+    }
+    
+    .github-status.warning {
+        background-color: rgba(255, 193, 7, 0.2);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        color: #ffc107;
+    }
+    
+    .github-status.error {
+        background-color: rgba(220, 53, 69, 0.2);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        color: #dc3545;
+    }
+
+    /* 加载动画样式优化 */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Token配置界面样式 */
+    .token-config-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .token-config-form {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        width: 400px;
+    }
+
+    .token-config-form h3 {
+        color: white;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .token-hint {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 15px;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .token-input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
+
+    .token-input:focus {
+        outline: none;
+        border-color: #6c63ff;
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .token-submit {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        background: linear-gradient(45deg, #6c63ff, #4a42e0);
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .token-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .token-error {
+        color: #ff4d4d;
+        text-align: center;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    /* Token配置界面样式优化 */
+    .token-instructions {
+        margin-bottom: 20px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .token-steps {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 15px 15px 15px 35px;
+        border-radius: 8px;
+        margin: 15px 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .token-steps li {
+        margin-bottom: 8px;
+    }
+
+    .token-steps a {
+        color: #6c63ff;
+        text-decoration: none;
+    }
+
+    .token-steps a:hover {
+        text-decoration: underline;
+    }
+
+    .token-steps strong {
+        color: #ff9800;
+    }
+
+    .token-hint.warning {
+        color: #ff9800;
+        font-size: 12px;
+        margin-top: 10px;
+    }
+
+    /* 自定义光标样式 */
+    #cursor {
+        width: 8px;
+        height: 8px;
+        background-color: #fff;
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.7;
+        transition: transform 0.2s ease;
+    }
+
+    #cursor-ring {
+        width: 24px;
+        height: 24px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9998;
+        transition: all 0.1s ease;
+    }
+</style>
+</body>
+</html> 
