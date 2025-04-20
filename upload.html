@@ -1093,6 +1093,68 @@
             });
         }
     });
+
+    // 初始化标签管理
+    function initTagManagement() {
+        const tagInput = document.getElementById('tagInput');
+        const addTagBtn = document.getElementById('addTagBtn');
+        const tagsContainer = document.getElementById('tagsContainer');
+        
+        // 存储已添加的标签
+        const tags = new Set();
+        
+        // 添加标签函数
+        function addTag(tagText) {
+            if (!tagText.trim()) return;
+            
+            // 检查标签是否已存在
+            if (tags.has(tagText)) {
+                alert('该标签已存在');
+                return;
+            }
+            
+            // 创建标签元素
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.innerHTML = `
+                ${tagText}
+                <button class="remove-tag">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // 添加到容器
+            tagsContainer.appendChild(tag);
+            tags.add(tagText);
+            
+            // 添加删除标签的点击事件
+            tag.querySelector('.remove-tag').addEventListener('click', function() {
+                tag.remove();
+                tags.delete(tagText);
+            });
+        }
+        
+        // 按回车添加标签
+        if (tagInput) {
+            tagInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTag(this.value);
+                    this.value = '';
+                }
+            });
+        }
+        
+        // 点击添加按钮添加标签
+        if (addTagBtn) {
+            addTagBtn.addEventListener('click', function() {
+                if (tagInput) {
+                    addTag(tagInput.value);
+                    tagInput.value = '';
+                }
+            });
+        }
+    }
 </script>
 
 <div class="password-modal" id="passwordModal">
