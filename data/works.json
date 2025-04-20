@@ -56,9 +56,14 @@
     "id": "1745128573340",
     "title": "集气站气田管网数字孪生",
     "description": "负责制作孪生场景，负责材质及功能的实现，还原工艺流程，通过ShaderGraph，UV特效及粒子特效还原工艺流程中的各阶段效果。（视频中画面最多的部分）",
-    "videoLink": "",
+    "videoLink": "https://www.bilibili.com/video/BV1EbPVeKE5C/?spm_id_from=333.1387.upload.video_card.click&vd_source=f4c4264195c0480d45c74636f4638215",
     "previewImage": "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E6%B0%94%E7%94%B0.png",
-    "tags": [],
-    "createTime": "2025-04-20T05:56:13.340Z"
+    "tags": [
+      "Unity技术美术",
+      "WebGL",
+      "数字孪生"
+    ],
+    "createTime": "2025-04-20T05:56:13.340Z",
+    "updateTime": "2025-04-20T05:59:17.468Z"
   }
 ]
