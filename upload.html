@@ -530,7 +530,31 @@
         }
     }
 
-    // 处理GitHub图片选择
+    // 在GITHUB_CONFIG后添加CDN配置
+    const CDN_CONFIG = {
+        baseUrl: 'https://cdn.jsdelivr.net/gh', // 使用jsDelivr CDN
+        fallbackUrl: 'https://raw.githubusercontent.com' // 备用URL
+    };
+
+    // 修改图片URL处理函数
+    function getImageUrl(githubUrl) {
+        if (!githubUrl) return '';
+        
+        // 如果是完整的GitHub URL，转换为CDN URL
+        if (githubUrl.includes('raw.githubusercontent.com')) {
+            const path = githubUrl.split('raw.githubusercontent.com/')[1];
+            return `${CDN_CONFIG.baseUrl}/${path}`;
+        }
+        
+        // 如果是相对路径，添加CDN前缀
+        if (githubUrl.startsWith('/')) {
+            return `${CDN_CONFIG.baseUrl}/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}${githubUrl}`;
+        }
+        
+        return githubUrl;
+    }
+
+    // 修改handleGithubImageSelection函数
     async function handleGithubImageSelection(url) {
         try {
             if (!url) {
@@ -544,22 +568,30 @@
                 throw new Error('预览元素不存在');
             }
 
+            // 使用CDN URL
+            const cdnUrl = getImageUrl(url);
+            
             // 先尝试加载图片
             await new Promise((resolve, reject) => {
                 const testImg = new Image();
                 testImg.crossOrigin = 'anonymous';
                 testImg.onload = resolve;
-                testImg.onerror = () => reject(new Error('图片加载失败'));
-                testImg.src = url;
+                testImg.onerror = () => {
+                    // 如果CDN加载失败，尝试使用备用URL
+                    const fallbackUrl = url.includes('raw.githubusercontent.com') ? url : 
+                        `${CDN_CONFIG.fallbackUrl}/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/main${url}`;
+                    testImg.src = fallbackUrl;
+                };
+                testImg.src = cdnUrl;
             });
 
             // 图片加载成功后更新预览
-            previewImg.src = url;
+            previewImg.src = cdnUrl;
             githubPreview.style.display = 'block';
             
             try {
-                // 直接使用图片URL创建File对象
-                const response = await fetch(url, {
+                // 使用CDN URL获取图片
+                const response = await fetch(cdnUrl, {
                     mode: 'cors',
                     headers: {
                         'Accept': 'image/jpeg, image/png, image/*'
@@ -567,25 +599,45 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const blob = await response.blob();
-                if (!blob.type.startsWith('image/')) {
-                    throw new Error('获取的不是图片文件');
-                }
-
-                const file = new File([blob], 'github-image.png', { type: blob.type });
-                const fileInput = document.getElementById('previewImageInput');
-                
-                if (fileInput && window.DataTransfer) {
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-                    fileInput.files = dataTransfer.files;
+                    // 如果CDN请求失败，尝试使用备用URL
+                    const fallbackUrl = url.includes('raw.githubusercontent.com') ? url : 
+                        `${CDN_CONFIG.fallbackUrl}/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/main${url}`;
+                    const fallbackResponse = await fetch(fallbackUrl, {
+                        mode: 'cors',
+                        headers: {
+                            'Accept': 'image/jpeg, image/png, image/*'
+                        }
+                    });
                     
-                    // 触发change事件
-                    const event = new Event('change', { bubbles: true });
-                    fileInput.dispatchEvent(event);
+                    if (!fallbackResponse.ok) {
+                        throw new Error(`HTTP error! Status: ${fallbackResponse.status}`);
+                    }
+                    
+                    const blob = await fallbackResponse.blob();
+                    const file = new File([blob], 'github-image.png', { type: blob.type });
+                    const fileInput = document.getElementById('previewImageInput');
+                    
+                    if (fileInput && window.DataTransfer) {
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        fileInput.files = dataTransfer.files;
+                        
+                        const event = new Event('change', { bubbles: true });
+                        fileInput.dispatchEvent(event);
+                    }
+                } else {
+                    const blob = await response.blob();
+                    const file = new File([blob], 'github-image.png', { type: blob.type });
+                    const fileInput = document.getElementById('previewImageInput');
+                    
+                    if (fileInput && window.DataTransfer) {
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        fileInput.files = dataTransfer.files;
+                        
+                        const event = new Event('change', { bubbles: true });
+                        fileInput.dispatchEvent(event);
+                    }
                 }
             } catch (error) {
                 console.error('处理GitHub图片时出错:', error);
@@ -602,403 +654,7 @@
         }
     }
 
-    // GitHub配置
-    const GITHUB_CONFIG = {
-        owner: 'SiYangHuaTan',
-        repo: 'SiYangHuaTan.github.io',
-        branch: 'main',
-        token: '', // 初始为空，将从localStorage加载
-        worksFile: 'data/works.json'
-    };
-
-    // 初始化GitHub API
-    async function initGitHubAPI() {
-        try {
-            // 尝试从localStorage加载token
-            const savedToken = localStorage.getItem('github_token');
-            if (savedToken) {
-                console.log('从localStorage加载GitHub Token');
-                GITHUB_CONFIG.token = savedToken;
-            }
-
-            if (!GITHUB_CONFIG.token) {
-                showGitHubStatus('warning', '请配置GitHub Token以启用数据同步');
-                return false;
-            }
-
-            // 测试API连接和写入权限
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}`, {
-                headers: {
-                    'Authorization': `token ${GITHUB_CONFIG.token}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`GitHub API连接失败: ${response.status}`);
-            }
-
-            // 检查Token权限
-            const userResponse = await fetch(`https://api.github.com/user`, {
-                headers: {
-                    'Authorization': `token ${GITHUB_CONFIG.token}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-            
-            if (!userResponse.ok) {
-                throw new Error('无法验证Token权限');
-            }
-            
-            const userData = await userResponse.json();
-            console.log(`已验证GitHub用户: ${userData.login}`);
-            
-            showGitHubStatus('success', `GitHub连接成功，用户: ${userData.login}`);
-            return true;
-        } catch (error) {
-            console.error('GitHub API初始化失败:', error);
-            showGitHubStatus('error', 'GitHub连接失败: ' + error.message);
-            return false;
-        }
-    }
-
-    // 显示GitHub状态
-    function showGitHubStatus(type, message) {
-        const statusElement = document.getElementById('github-status');
-        if (statusElement) {
-            statusElement.style.display = 'block';
-            statusElement.className = `github-status ${type}`;
-            const messageElement = statusElement.querySelector('#github-status-message');
-            if (messageElement) {
-                messageElement.textContent = message;
-            }
-        }
-    }
-
-    // 保存作品数据到GitHub
-    async function saveWorksToGitHub(works) {
-        try {
-            // 检查Token是否已配置
-            if (!GITHUB_CONFIG.token) {
-                throw new Error('请先配置GitHub Token');
-            }
-            
-            showGitHubStatus('warning', '正在保存作品数据到GitHub...');
-            
-            // 获取现有文件的SHA（如果存在）
-            let sha = '';
-            try {
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.worksFile}`, {
-                    headers: {
-                        'Authorization': `token ${GITHUB_CONFIG.token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-                
-                // 如果文件存在，获取SHA
-                if (response.ok) {
-                    const data = await response.json();
-                    sha = data.sha;
-                    console.log('找到现有文件，SHA:', sha);
-                } else if (response.status === 404) {
-                    console.log('文件不存在，将创建新文件');
-                } else {
-                    throw new Error(`获取文件信息失败: ${response.status} ${response.statusText}`);
-                }
-            } catch (error) {
-                console.log('获取文件信息时出错:', error.message);
-                if (!error.message.includes('404')) {
-                    throw error;
-                }
-            }
-
-            // 使用正确的编码方式处理中文
-            const jsonString = JSON.stringify(works, null, 2);
-            console.log('JSON字符串预览:', jsonString.substring(0, 100) + '...');
-            
-            // 将字符串转换为UTF-8编码的Uint8Array
-            const encoder = new TextEncoder();
-            const utf8Bytes = encoder.encode(jsonString);
-            
-            // 转换为Base64
-            const base64Content = btoa(
-                Array.from(utf8Bytes)
-                    .map(byte => String.fromCharCode(byte))
-                    .join('')
-            );
-            
-            // 准备更新或创建文件
-            const body = {
-                message: '更新作品数据',
-                content: base64Content,
-                branch: GITHUB_CONFIG.branch
-            };
-
-            if (sha) {
-                body.sha = sha;
-            }
-            
-            console.log('准备保存数据，文件路径:', GITHUB_CONFIG.worksFile);
-
-            // 发送请求创建/更新文件
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.worksFile}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${GITHUB_CONFIG.token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json'
-                },
-                body: JSON.stringify(body)
-            });
-
-            const responseData = await response.json();
-            
-            if (!response.ok) {
-                console.error('API错误响应:', responseData);
-                if (responseData.message.includes('personal access token')) {
-                    throw new Error('Token权限不足，请确保您的Token有仓库写入权限');
-                } else {
-                    throw new Error(`保存失败: ${responseData.message}`);
-                }
-            }
-
-            showGitHubStatus('success', '作品数据保存成功！');
-            console.log('作品数据保存成功');
-            return true;
-        } catch (error) {
-            console.error('保存作品数据失败:', error);
-            showGitHubStatus('error', '保存失败: ' + error.message);
-            throw error;
-        }
-    }
-
-    // 修改表单提交处理
-    async function handleFormSubmit(e) {
-        e.preventDefault();
-        
-        try {
-            // 验证GitHub配置
-            if (!await initGitHubAPI()) {
-                throw new Error('请先配置GitHub Token');
-            }
-
-            // 验证必填字段
-            const title = document.getElementById('workTitle').value.trim();
-            const description = document.getElementById('workDescription').value.trim();
-            const termsAgreement = document.getElementById('terms').checked;
-            
-            if (!title) throw new Error('请输入作品标题');
-            if (!description) throw new Error('请输入作品描述');
-            if (!termsAgreement) throw new Error('请同意上传条款');
-            
-            // 获取预览图片
-            const fileInput = document.getElementById('previewImageInput');
-            if (!fileInput.files[0] && !document.querySelector('#githubPreview img').src) {
-                throw new Error('请上传预览图片或选择GitHub图片');
-            }
-            
-            // 显示加载动画
-            document.querySelector('.loading-overlay').style.display = 'flex';
-            
-            // 获取图片数据
-            let previewImage;
-            if (document.getElementById('useGithub').checked) {
-                previewImage = document.querySelector('#githubPreview img').src;
-            } else {
-                previewImage = await compressImage(fileInput.files[0]);
-            }
-            
-            // 收集标签
-            const tags = Array.from(document.querySelectorAll('.tag'))
-                .map(tag => tag.textContent.trim())
-                .filter(Boolean);
-            
-            // 创建作品对象
-            const work = {
-                id: Date.now().toString(),
-                title: title,
-                description: description,
-                videoLink: document.getElementById('workVideoLink').value.trim(),
-                previewImage: previewImage,
-                tags: tags,
-                createTime: new Date().toISOString()
-            };
-            
-            // 从GitHub获取现有作品
-            const existingWorks = await fetchWorksFromGitHub() || [];
-            
-            // 将新作品添加到数组末尾
-            const works = [...existingWorks, work];
-            
-            // 保存到GitHub
-            await saveWorksToGitHub(works);
-            
-            // 显示上传成功弹窗
-            const continueUpload = await showUploadSuccessDialog();
-            
-            if (continueUpload) {
-                // 重置表单
-                document.getElementById('uploadForm').reset();
-                document.querySelector('.preview-container').style.display = 'none';
-                document.getElementById('githubPreview').style.display = 'none';
-                document.getElementById('uploadArea').style.display = 'block';
-                // 清空标签容器
-                const tagsContainer = document.getElementById('tagsContainer');
-                if (tagsContainer) {
-                    tagsContainer.innerHTML = '';
-                }
-            } else {
-                // 返回首页
-                window.location.href = 'index.html';
-            }
-            
-        } catch (error) {
-            alert(error.message || '上传失败，请重试');
-            console.error('上传失败:', error);
-        } finally {
-            document.querySelector('.loading-overlay').style.display = 'none';
-        }
-    }
-
-    // 添加上传成功弹窗函数
-    function showUploadSuccessDialog() {
-        return new Promise((resolve) => {
-            const dialog = document.createElement('div');
-            dialog.className = 'success-dialog';
-            dialog.innerHTML = `
-                <div class="success-content">
-                    <h3>上传成功！</h3>
-                    <p>作品已成功上传到GitHub</p>
-                    <div class="success-buttons">
-                        <button class="continue-btn">继续上传</button>
-                        <button class="return-btn">返回首页</button>
-                    </div>
-                </div>
-            `;
-            
-            // 添加样式
-            const style = document.createElement('style');
-            style.textContent = `
-                .success-dialog {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.8);
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    z-index: 1000;
-                }
-                .success-content {
-                    background: rgba(255, 255, 255, 0.1);
-                    padding: 30px;
-                    border-radius: 20px;
-                    backdrop-filter: blur(10px);
-                    text-align: center;
-                    width: 300px;
-                }
-                .success-content h3 {
-                    color: white;
-                    margin-bottom: 15px;
-                }
-                .success-content p {
-                    color: rgba(255, 255, 255, 0.8);
-                    margin-bottom: 20px;
-                }
-                .success-buttons {
-                    display: flex;
-                    gap: 10px;
-                    justify-content: center;
-                }
-                .success-buttons button {
-                    padding: 10px 20px;
-                    border-radius: 10px;
-                    border: none;
-                    cursor: pointer;
-                    font-size: 14px;
-                    transition: all 0.3s ease;
-                }
-                .continue-btn {
-                    background: linear-gradient(45deg, #6c63ff, #4a42e0);
-                    color: white;
-                }
-                .return-btn {
-                    background: rgba(255, 255, 255, 0.1);
-                    color: white;
-                }
-                .success-buttons button:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                }
-            `;
-            document.head.appendChild(style);
-            document.body.appendChild(dialog);
-            
-            // 添加按钮事件
-            dialog.querySelector('.continue-btn').addEventListener('click', () => {
-                document.body.removeChild(dialog);
-                document.head.removeChild(style);
-                resolve(true);
-            });
-            
-            dialog.querySelector('.return-btn').addEventListener('click', () => {
-                document.body.removeChild(dialog);
-                document.head.removeChild(style);
-                resolve(false);
-            });
-        });
-    }
-
-    // 修复GitHub数据获取函数
-    async function fetchWorksFromGitHub() {
-        try {
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.worksFile}`, {
-                headers: {
-                    'Authorization': `token ${GITHUB_CONFIG.token}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-
-            if (response.status === 404) {
-                console.log('没有找到作品数据文件，将创建新文件');
-                return [];
-            }
-
-            if (!response.ok) {
-                throw new Error(`API请求失败: ${response.status}`);
-            }
-
-            const data = await response.json();
-            
-            try {
-                // 安全解码内容
-                const content = data.content.replace(/\s/g, ''); // 移除所有空白字符
-                const decoded = atob(content);
-                
-                // 使用TextDecoder处理UTF-8编码
-                const decoder = new TextDecoder('utf-8');
-                const utf8Bytes = new Uint8Array(decoded.length);
-                for (let i = 0; i < decoded.length; i++) {
-                    utf8Bytes[i] = decoded.charCodeAt(i);
-                }
-                const jsonString = decoder.decode(utf8Bytes);
-                
-                const works = JSON.parse(jsonString);
-                console.log('成功获取作品数据:', works.length);
-                return works;
-            } catch (decodeError) {
-                console.error('解码数据失败:', decodeError);
-                return [];
-            }
-        } catch (error) {
-            console.error('获取作品数据失败:', error);
-            return [];
-        }
-    }
-
-    // 加载GitHub示例图片
+    // 修改loadGithubImages函数
     function loadGithubImages() {
         const githubSelectElement = document.getElementById('githubSelect');
         console.log('加载GitHub图片到选择器');
@@ -1014,35 +670,35 @@
         const userImages = [
             { 
                 name: "K2-so", 
-                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/K2-so.png" 
+                url: "/img/K2-so.png" 
             },
             { 
                 name: "xiaomi14", 
-                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/xiaomi14.png" 
+                url: "/img/xiaomi14.png" 
             },
             { 
                 name: "家居", 
-                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E5%AE%B6%E5%B1%85.png" 
+                url: "/img/家居.png" 
             },
             { 
                 name: "气田", 
-                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E6%B0%94%E7%94%B0.png" 
+                url: "/img/气田.png" 
             },
             { 
                 name: "洗煤厂", 
-                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E6%B4%97%E7%85%A4%E5%8E%82.png" 
+                url: "/img/洗煤厂.png" 
             },
             { 
                 name: "采煤", 
-                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E9%87%87%E7%85%A4.png" 
+                url: "/img/采煤.png" 
             },
             { 
                 name: "风车", 
-                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E9%A3%8E%E8%BD%A6.png" 
+                url: "/img/风车.png" 
             },
             { 
                 name: "飞机", 
-                url: "https://raw.githubusercontent.com/SiYangHuaTan/SiYangHuaTan.github.io/main/img/%E9%A3%9E%E6%9C%BA.png" 
+                url: "/img/飞机.png" 
             }
         ];
         
